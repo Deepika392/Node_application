@@ -1,17 +1,22 @@
 const User = require('./../models/User')
 const { sequelize, Op } = require('sequelize');
+const Role = require('./../models/Role');
+const bcryptUils = require('./../utils/bcrypt')
+
 exports.createUser = async (req, res) => {
 
-  const { firstName, lastName, email, username, role } = req.body;
+  const { firstName, lastName, email, username, roleId } = req.body;
   try {
     // Create a new user
+    const pass = await bcryptUils.encodePassword('Honey@1313');
     const newUser = await User.create({
       firstName,
       lastName,
       email,
       username,
-      role,
-      password: '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm'
+      roleId,
+      // password: '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm'
+      password:pass
     });
     res.status(201).json(newUser);
   } catch (err) {
@@ -22,15 +27,23 @@ exports.createUser = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   try {
-    const users = await User.findAll(
-      {
-        where: {
-          id: {
-            [Op.not]: 1
-          }
-        },
-        order: [['createdAt', 'DESC']]
-      });
+   
+    const users = await User.findAll({
+      where: {
+        id: {
+          [Op.ne]: 1 // Exclude user with id 1
+        }
+      },
+
+      include: [{
+        model: Role,
+        attributes: ['roleName']
+      }],
+      attributes: ['id',  'firstName','lastName','email'],
+      order: [['createdAt', 'DESC']],
+      
+    }
+  );
     res.json(users);
   } catch (err) {
     console.error('Error fetching users', err);
@@ -70,10 +83,9 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-
 exports.updateUser = async (req, res) => {
   const userId = req.params.id;
-  const { firstName, lastName, email, role} = req.body;
+  const { firstName, lastName, email, roleId} = req.body;
 
   try {
     const user = await User.findByPk(userId);
@@ -86,7 +98,7 @@ exports.updateUser = async (req, res) => {
     user.firstName = firstName;
     user.lastName = lastName;
     user.email = email;
-    user.role = role;
+    user.roleId = roleId;
     await user.save();
 
     res.json(user);

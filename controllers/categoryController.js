@@ -1,6 +1,7 @@
 const Category = require('./../models/Category');
 const Product = require('./../models/Product');
 const User = require('./../models/User');
+const Role = require('./../models/Role');
 
 exports.createCategory = async (req, res) => {
 
@@ -92,11 +93,13 @@ exports.recordCount = async (req, res) => {
     const categoryCount = await Category.count();
     const productCount = await Product.count();
     const userCount = await User.count();
+    const roleCount = await Role.count();
     
     res.status(200).json({
       userCount,
       productCount,
       categoryCount,
+      roleCount
   });
    
   } catch (error) {
