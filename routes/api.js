@@ -16,6 +16,7 @@ router.get('/user', userController.getUser);
 router.delete('/user/:id', userController.deleteUser);
 router.put('/user/:id', userController.updateUser);
 router.get('/user/:id', userController.getUserById);
+router.get('/user/role/:roleId', userController.getUseByRole);
 
 router.post('/category', categoryController.createCategory);
 router.get('/category', categoryController.getCategory);
@@ -37,6 +38,8 @@ router.post('/role', roleController.createRole);
 router.get('/role', roleController.getRole);
 router.get('/role/:id', roleController.getRoleById);
 router.put('/role/:id', roleController.updateRole);
+router.delete('/role/:id', roleController.deleteRole);
+
 
 router.post('/permission', permissionController.createPermission);
 router.get('/permission', permissionController.getPermission);
@@ -44,9 +47,11 @@ router.post('/permissionByRole', permissionController.getPermissionByRole);
 router.delete('/permission/:id', permissionController.deletePermission);
 router.get('/permission/:id', permissionController.getPermissionById);
 router.put('/permission/:id', permissionController.updatePermission);
+router.get('/permission/role/:roleId', permissionController.getPermissionByRoleId);
+
+
 router.post('/checkModulePermission', permissionController.checkModulePermission);
 router.post('/checkDashboardPermission', permissionController.checkDashboardPermission);
-
 
 router.get('/module', moduleController.getModule);
 

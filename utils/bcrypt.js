@@ -10,3 +10,9 @@ exports.comparePasswords = async ( rawPassword,DBPassword) => {
      throw new Error('Error comparing passwords');
    }
  };
+
+ exports.encodePassword = async(rawPassword)=>{
+  const SALT = bcrypt.genSalt()
+  return  bcrypt.hashSync(rawPassword,await SALT)
+
+}

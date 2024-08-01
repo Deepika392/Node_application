@@ -191,3 +191,19 @@ exports.checkDashboardPermission = async(req,res)=>{
     res.status(500).json({ error: 'Error fetching permissions by role' });
   }
 }
+
+exports.getPermissionByRoleId = async(req,res)=>{
+
+  const { roleId } = req.params; 
+  try {
+    const products = await Permission.findAll({
+      where: {
+        roleId: roleId,
+      },
+    });
+    res.json(products);
+  } catch (err) {
+    console.error('Error fetching Permission:', err);
+    res.status(500).json({ error: 'Error fetching Permission' });
+  }
+}

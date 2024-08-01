@@ -107,3 +107,21 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ error: 'Error updating user' });
   }
 };
+
+
+
+exports.getUseByRole = async(req,res)=>{
+
+  const { roleId } = req.params; 
+  try {
+    const users = await User.findAll({
+      where: {
+        roleId: roleId,
+      },
+    });
+    res.json(users);
+  } catch (err) {
+    console.error('Error fetching getUseByRole:', err);
+    res.status(500).json({ error: 'Error fetching getUseByRole' });
+  }
+}
