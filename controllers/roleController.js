@@ -4,10 +4,14 @@ const { sequelize, Op } = require('sequelize');
 exports.createRole = async (req, res) => {
 
   const { roleName } = req.body;
+  // Validate roleName length
+  if (!roleName || roleName.length > 100) {
+    return res.status(400).json({ error: 'roleName must be between 1 and 100 characters long' });
+  }
   try {
     // Create a new role
     const newRole = await Role.create({
-        roleName : roleName
+      roleName: roleName
     });
     res.status(201).json(newRole);
   } catch (err) {
@@ -17,7 +21,7 @@ exports.createRole = async (req, res) => {
 };
 
 
-exports.getRole = async(req,res)=>{
+exports.getRole = async (req, res) => {
   try {
     const roles = await Role.findAll(
       {
@@ -26,7 +30,7 @@ exports.getRole = async(req,res)=>{
             [Op.not]: 1
           }
         },
-        order: [['createdAt', 'ASC']]
+        order: [['createdAt', 'DESC']]
       });
     res.json(roles);
   } catch (err) {
@@ -51,10 +55,13 @@ exports.getRoleById = async (req, res) => {
 };
 
 
-exports.updateRole= async (req, res) => {
+exports.updateRole = async (req, res) => {
   const roleId = req.params.id;
   const { roleName } = req.body;
-
+  // Validate roleName length
+  if (!roleName || roleName.length > 100) {
+    return res.status(400).json({ error: 'roleName must be between 1 and 100 characters long' });
+  }
   try {
     const role = await User.findByPk(roleId);
 
@@ -64,7 +71,7 @@ exports.updateRole= async (req, res) => {
 
     // Update role data
     role.roleName = roleName;
-   
+
     role.id = roleId;
     await role.save();
     res.json(role);
@@ -77,7 +84,7 @@ exports.updateRole= async (req, res) => {
 
 exports.updateRole = async (req, res) => {
   const roleId = req.params.id;
-  const { roleName} = req.body;
+  const { roleName } = req.body;
 
   try {
     const role = await Role.findByPk(roleId);
@@ -105,7 +112,7 @@ exports.deleteRole = async (req, res) => {
     if (!role) {
       return res.status(404).json({ error: 'Role not found' });
     }
-   
+
     await role.destroy();
 
     res.json({ message: 'Role deleted successfully' });

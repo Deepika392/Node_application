@@ -14,15 +14,24 @@ const Product = sequelize.define('Product', {
     productName: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            len: [1, 100] 
+          }
     },
 
     description: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            len: [1, 250] 
+          }
     },
     price: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        validate: {
+            len: [1, 6] 
+          }
     },
     image: DataTypes.STRING, 
 

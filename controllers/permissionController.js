@@ -1,11 +1,7 @@
 const Permission = require('./../models/Permission');
 const Role = require('./../models/Role');
 const Module = require('./../models/Module')
-
 const Masterroutes = require('./../models/Masterroute');
-
-
-
 
 exports.createPermission = async (req, res) => {
 const { roleId, moduleId, can_read, can_write,can_edit,can_delete } = req.body;
@@ -52,7 +48,7 @@ exports.getPermission = async(req,res)=>{
         attributes:['moduleName']
       }],
       attributes: ['id','can_read','can_write','can_edit','can_delete'],
-      order: [['roleID', 'ASC']],
+      order: [['roleID', 'DESC']],
      
     },
     

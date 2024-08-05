@@ -6,6 +6,31 @@ const bcryptUils = require('./../utils/bcrypt')
 exports.createUser = async (req, res) => {
 
   const { firstName, lastName, email, username, roleId } = req.body;
+
+  // Validation
+  const errors = {};
+
+  // Validate lengths
+  if (firstName.length > 50) {
+    errors.firstName = 'First name must not exceed 50 characters';
+  }
+  if (lastName.length > 50) {
+    errors.lastName = 'Last name must not exceed 50 characters';
+  }
+  if (username.length > 50) {
+    errors.username = 'Username must not exceed 50 characters';
+  }
+
+  // Validate email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    errors.email = 'Invalid email format';
+  }
+
+  // Check if there are validation errors
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({ errors });
+  }
   try {
     // Create a new user
     const pass = await bcryptUils.encodePassword('Honey@1313');
@@ -15,8 +40,7 @@ exports.createUser = async (req, res) => {
       email,
       username,
       roleId,
-      // password: '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm'
-      password:pass
+      password: pass
     });
     res.status(201).json(newUser);
   } catch (err) {
@@ -27,7 +51,7 @@ exports.createUser = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   try {
-   
+
     const users = await User.findAll({
       where: {
         id: {
@@ -39,11 +63,11 @@ exports.getUser = async (req, res) => {
         model: Role,
         attributes: ['roleName']
       }],
-      attributes: ['id',  'firstName','lastName','email'],
+      attributes: ['id', 'firstName', 'lastName', 'email'],
       order: [['createdAt', 'DESC']],
-      
+
     }
-  );
+    );
     res.json(users);
   } catch (err) {
     console.error('Error fetching users', err);
@@ -85,8 +109,29 @@ exports.getUserById = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   const userId = req.params.id;
-  const { firstName, lastName, email, roleId} = req.body;
+  const { firstName, lastName, email, roleId } = req.body;
 
+  // Validation
+  const errors = {};
+
+  // Validate lengths
+  if (firstName.length > 50) {
+    errors.firstName = 'First name must not exceed 50 characters';
+  }
+  if (lastName.length > 50) {
+    errors.lastName = 'Last name must not exceed 50 characters';
+  }
+ 
+  // Validate email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    errors.email = 'Invalid email format';
+  }
+
+  // Check if there are validation errors
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({ errors });
+  }
   try {
     const user = await User.findByPk(userId);
 
@@ -110,9 +155,9 @@ exports.updateUser = async (req, res) => {
 
 
 
-exports.getUseByRole = async(req,res)=>{
+exports.getUseByRole = async (req, res) => {
 
-  const { roleId } = req.params; 
+  const { roleId } = req.params;
   try {
     const users = await User.findAll({
       where: {

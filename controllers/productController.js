@@ -9,14 +9,32 @@ const fs = require('fs');
 
 
 exports.createProduct = async (req, res) => {
- 
   upload.single('image')(req, res, async (err) => {
     if (err) {
       return res.status(400).json({ error: err });
     }
-
     const { productName, description, price, categoryId } = req.body;
     const image = req.file ? req.file.filename : null;
+
+     // Validation
+     const errors = {};
+
+     if (!productName || productName.length > 100) {
+       errors.productName = 'Product name must be between 1 and 100 characters';
+     }
+ 
+     if (!description || description.length > 250) {
+       errors.description = 'Description must be between 1 and 250 characters';
+     }
+ 
+     if (!price || isNaN(price) || price.toString().length > 7) {
+       errors.price = 'Price must be a number and not exceed 7 characters';
+     }
+ 
+     if (Object.keys(errors).length > 0) {
+       return res.status(400).json({ errors });
+     }
+ 
 
     try {
       // Create a new product
@@ -72,39 +90,27 @@ exports.deleteProduct = async (req, res) => {
 }
 
 
-// exports.updateProduct = async (req, res) => {
-//   // console.log('req.body',req); return false
-//   const productId = req.params.id;
-//   const { productName,description,price,categoryId } = req.body;
-
-//   try {
-//     const product = await Product.findByPk(productId);
-
-//     if (!product) {
-//       return res.status(404).json({ error: 'product not found' });
-//     }
-
-//     // Update Category data
-//     product.productName = productName;
-//     product.description = description;
-//     product.price = price;
-//     product.categoryId = categoryId;
-    
-//     await product.save();
-
-//     res.json(product);
-//   } catch (err) {
-//     console.error('Error updating product', err);
-//     res.status(500).json({ error: 'Error updating product' });
-//   }
-// };
-
-
-
 exports.updateProduct = async (req, res) => {
  
   const productId = req.params.id;
+  // Validation
+  const errors = {};
 
+  if (!productName || productName.length > 100) {
+    errors.productName = 'Product name must be between 1 and 100 characters';
+  }
+
+  if (!description || description.length > 250) {
+    errors.description = 'Description must be between 1 and 250 characters';
+  }
+
+  if (!price || isNaN(price) || price.toString().length > 7) {
+    errors.price = 'Price must be a number and not exceed 7 characters';
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({ errors });
+  }
  
   try {
     const product = await Product.findByPk(productId);
@@ -120,7 +126,6 @@ exports.updateProduct = async (req, res) => {
       }
 
       const { productName, description, price, categoryId } = req.body;
-      
 
       // Update product details
       product.productName = productName;
@@ -157,7 +162,16 @@ exports.updateProduct = async (req, res) => {
 exports.getproductById = async (req, res) => {
   const productId = req.params.id;
   try {
-    const product = await Product.findByPk(productId);
+    // const product = await Product.findByPk(productId);
+    const product = await Product.findByPk(productId, {
+      include: [
+        {
+          model: Category,
+          attributes: ['categoryName'],
+        }
+      ]
+    });
+
 
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });

@@ -6,6 +6,9 @@ const Role = require('./../models/Role');
 exports.createCategory = async (req, res) => {
 
   const { categoryName } = req.body;
+  if (!categoryName || categoryName.length > 100) {
+    return res.status(400).json({ error: 'categoryName must be between 1 and 100 characters long' });
+  }
   try {
     // Create a new category
     const newCategory = await Category.create({
@@ -50,7 +53,9 @@ exports.deleteCategory = async (req, res) => {
 exports.updateCategory = async (req, res) => {
   const catId = req.params.id;
   const { categoryName } = req.body;
-
+  if (!categoryName || categoryName.length > 100) {
+    return res.status(400).json({ error: 'categoryName must be between 1 and 100 characters long' });
+  }
   try {
     const category = await Category.findByPk(catId);
 
