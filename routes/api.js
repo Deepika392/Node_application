@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const authenticateToken = require('./../middleware/is-auth'); 
 const userController = require('./../controllers/userController');
 const categoryController = require('./../controllers/categoryController');
 const productController = require('./../controllers/productController');
@@ -8,54 +11,57 @@ const roleController = require('./../controllers/roleController');
 const permissionController = require('./../controllers/permissionController');
 const moduleController = require('./../controllers/moduleController');
 const masterRouteController = require('./../controllers/masterRouteController');
+const tokenController = require('./../controllers/tokenController');
 
-// Define routes
+dotenv.config();
 
-router.post('/user', userController.createUser);
-router.get('/user', userController.getUser);
-router.delete('/user/:id', userController.deleteUser);
-router.put('/user/:id', userController.updateUser);
-router.get('/user/:id', userController.getUserById);
-router.get('/user/role/:roleId', userController.getUseByRole);
+router.post('/user', authenticateToken,userController.createUser);
+router.get('/user',  authenticateToken, userController.getUser);
+router.delete('/user/:id', authenticateToken, userController.deleteUser);
+router.put('/user/:id', authenticateToken,userController.updateUser);
+router.get('/user/:id', authenticateToken,userController.getUserById);
+router.get('/user/role/:roleId', authenticateToken,userController.getUseByRole);
 
-router.post('/category', categoryController.createCategory);
-router.get('/category', categoryController.getCategory);
-router.delete('/category/:id', categoryController.deleteCategory);
-router.put('/category/:id', categoryController.updateCategory);
-router.get('/category/:id', categoryController.getcategoryById);
+// router.post('/token', tokenController.refreshTokens);
 
-router.post('/product', productController.createProduct);
-router.get('/product', productController.getProduct);
-router.delete('/product/:id', productController.deleteProduct);
-router.put('/product/:id', productController.updateProduct);
-router.get('/product/:id', productController.getproductById);
-router.get('/product/category/:categoryId', productController.getproductByCatId);
+router.post('/category', authenticateToken,categoryController.createCategory);
+router.get('/category', authenticateToken,categoryController.getCategory);
+router.delete('/category/:id', authenticateToken,categoryController.deleteCategory);
+router.put('/category/:id', authenticateToken,categoryController.updateCategory);
+router.get('/category/:id',authenticateToken, categoryController.getcategoryById);
+
+router.post('/product', authenticateToken, productController.createProduct);
+router.get('/product',authenticateToken,  productController.getProduct);
+router.delete('/product/:id', authenticateToken, productController.deleteProduct);
+router.put('/product/:id',authenticateToken,  productController.updateProduct);
+router.get('/product/:id', authenticateToken, productController.getproductById);
+router.get('/product/category/:categoryId', authenticateToken, productController.getproductByCatId);
 
 router.post('/login', loginController.login);
-router.get('/records', categoryController.recordCount);
+router.get('/records', authenticateToken,categoryController.recordCount);
 
-router.post('/role', roleController.createRole);
-router.get('/role', roleController.getRole);
-router.get('/role/:id', roleController.getRoleById);
-router.put('/role/:id', roleController.updateRole);
-router.delete('/role/:id', roleController.deleteRole);
+router.post('/role',authenticateToken, roleController.createRole);
+router.get('/role', authenticateToken,roleController.getRole);
+router.get('/role/:id', authenticateToken,roleController.getRoleById);
+router.put('/role/:id', authenticateToken,roleController.updateRole);
+router.delete('/role/:id', authenticateToken,roleController.deleteRole);
 
 
-router.post('/permission', permissionController.createPermission);
-router.get('/permission', permissionController.getPermission);
-router.post('/permissionByRole', permissionController.getPermissionByRole);
-router.delete('/permission/:id', permissionController.deletePermission);
-router.get('/permission/:id', permissionController.getPermissionById);
-router.put('/permission/:id', permissionController.updatePermission);
-router.get('/permission/role/:roleId', permissionController.getPermissionByRoleId);
+router.post('/permission', authenticateToken,permissionController.createPermission);
+router.get('/permission', authenticateToken,permissionController.getPermission);
+router.post('/permissionByRole', authenticateToken,permissionController.getPermissionByRole);
+router.delete('/permission/:id', authenticateToken,permissionController.deletePermission);
+router.get('/permission/:id',authenticateToken, permissionController.getPermissionById);
+router.put('/permission/:id', authenticateToken,permissionController.updatePermission);
+router.get('/permission/role/:roleId', authenticateToken,permissionController.getPermissionByRoleId);
 
 
 router.post('/checkModulePermission', permissionController.checkModulePermission);
 router.post('/checkDashboardPermission', permissionController.checkDashboardPermission);
 
-router.get('/module', moduleController.getModule);
+router.get('/module', authenticateToken,moduleController.getModule);
 
-router.get('/route',masterRouteController.getRoutes);
+router.get('/route',authenticateToken,masterRouteController.getRoutes);
 
 
 

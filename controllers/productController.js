@@ -93,6 +93,7 @@ exports.deleteProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
  
   const productId = req.params.id;
+  const { productName, description, price, categoryId } = req.body;
   // Validation
   const errors = {};
 
@@ -124,8 +125,6 @@ exports.updateProduct = async (req, res) => {
       if (err) {
         return res.status(400).json({ error: err.message });
       }
-
-      const { productName, description, price, categoryId } = req.body;
 
       // Update product details
       product.productName = productName;

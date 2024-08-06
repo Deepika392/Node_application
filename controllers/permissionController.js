@@ -137,7 +137,6 @@ exports.getPermissionByRole = async (req, res) => {
       },
     );
     
-    console.log('Results:', results); 
     res.json(results); 
   } catch (err) {
     console.error('Error fetching permissions by role:', err); // Error handling
@@ -158,8 +157,7 @@ exports.checkModulePermission = async(req,res)=>{
         type: Permission.sequelize.QueryTypes.SELECT,
       },
     );
-    
-    console.log('Results:', results); 
+
     res.json(results[0]); 
   } catch (err) {
     console.error('Error fetching permissions by role:', err); // Error handling
