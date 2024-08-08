@@ -94,6 +94,7 @@ exports.updateProduct = async (req, res) => {
  
   const productId = req.params.id;
   const { productName, description, price, categoryId } = req.body;
+  
   // Validation
   const errors = {};
 

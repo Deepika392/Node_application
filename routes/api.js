@@ -22,7 +22,6 @@ router.put('/user/:id', authenticateToken,userController.updateUser);
 router.get('/user/:id', authenticateToken,userController.getUserById);
 router.get('/user/role/:roleId', authenticateToken,userController.getUseByRole);
 
-// router.post('/token', tokenController.refreshTokens);
 
 router.post('/category', authenticateToken,categoryController.createCategory);
 router.get('/category', authenticateToken,categoryController.getCategory);
@@ -38,6 +37,7 @@ router.get('/product/:id', authenticateToken, productController.getproductById);
 router.get('/product/category/:categoryId', authenticateToken, productController.getproductByCatId);
 
 router.post('/login', loginController.login);
+router.post('/refresh-token', loginController.refreshToken);
 router.get('/records', authenticateToken,categoryController.recordCount);
 
 router.post('/role',authenticateToken, roleController.createRole);
@@ -49,7 +49,7 @@ router.delete('/role/:id', authenticateToken,roleController.deleteRole);
 
 router.post('/permission', authenticateToken,permissionController.createPermission);
 router.get('/permission', authenticateToken,permissionController.getPermission);
-router.post('/permissionByRole', authenticateToken,permissionController.getPermissionByRole);
+router.post('/permissionByRole',permissionController.getPermissionByRole);
 router.delete('/permission/:id', authenticateToken,permissionController.deletePermission);
 router.get('/permission/:id',authenticateToken, permissionController.getPermissionById);
 router.put('/permission/:id', authenticateToken,permissionController.updatePermission);

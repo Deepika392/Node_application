@@ -178,7 +178,6 @@ exports.checkDashboardPermission = async(req,res)=>{
       },
     );
     
-    console.log('Results:', results); 
     res.json(results); 
   } catch (err) {
     console.error('Error fetching permissions by role:', err); // Error handling
